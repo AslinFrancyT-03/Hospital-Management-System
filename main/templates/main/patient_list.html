@@ -1,69 +1,112 @@
 {% extends 'main/base.html' %}
 {% load static %}
- 
-    
 
-{% block contentTitle %}
-    Patient List 
-
-
-{% endblock contentTitle %}
+{% block title %}Patient List | Lifeline Clinic{% endblock %}
 
 {% block content %}
+<div class="container-fluid p-0">
+    
+    <!-- Title & Description Row -->
+    <div class="dashboard-title-row mb-4">
+        <div>
+            <h2>Patient Registry</h2>
+            <p>Search, filter, and update current patient records and admission status.</p>
+        </div>
+        <div>
+            <a href="{% url 'add_patient' %}" class="btn btn-primary">
+                <i class="fas fa-plus mr-2"></i> Add New Patient
+            </a>
+        </div>
+    </div>
 
-    {% comment %} 1)name, 2)bed number, 3)status: critical, less crtical, recovering, recovered
-        4)edit option, will display modal that will contain, bed number will change to NA once recovered 
-     {% endcomment %}
-
-    <!-- Topbar Search -->
-    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search mb-3" method="GET" id="list">
-        <div class="input-group">
-        {{myFilter.form}}
-
-            {% comment %} <input type="text" class="form-control bg-light border-0 small" placeholder="Search patient..." {% endcomment %}
-                {% comment %} id="searchPatient"> {% endcomment %}
-            <div class="input-group-append">
+    <!-- Filters Panel -->
+    <div class="content-card mb-4" style="padding: 20px;">
+        <form class="form-row align-items-center" method="GET" id="list">
+            <div class="col-md-9">
+                <div class="form-row">
+                    {% for field in myFilter.form %}
+                        <div class="col-md-4 mb-2">
+                            <label class="sr-only" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-light"><i class="fas fa-filter text-secondary" style="font-size: 0.8rem;"></i></span>
+                                </div>
+                                {{ field }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-3 mb-2">
                 <button class="btn btn-primary btn-block" type="submit">
-                    <i class="fas fa-search fa-sm"></i>
+                    <i class="fas fa-search mr-2"></i> Apply Filter
                 </button>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
     
-     <div class="table-responsive mt-3">
+    <!-- Patients Table Card -->
+    <div class="table-responsive">
         <table class="table table-hover">
             <thead>
-                <th><h3>Name</h3></th>
-                <th><h3>Bed no</h3></th>
-                <th><h3>Status</h3></th>
-                <th><h3>Edit</h3></th>
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Bed Number</th>
+                    <th>Status</th>
+                    <th class="text-right">Actions</th>
+                </tr>
             </thead>
-
             <tbody>
                 {% for patient in patients %}
-
-                <tr class="mx-auto">
-                    <td scope="row"><h5>{{ patient.name }}</h5></td>
-                    <td><h5>{{ patient.bed_num }}</h5></td>
-                    <td><h5>{{ patient.status }}</h5></td>
-                    <td><a href="/patient/{{patient.id}}" class="btn btn-purple"><h5>Update</h5></a></td>
-                </tr>
-    
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="queue-avatar" style="width: 36px; height: 36px; font-size: 0.85rem;">
+                                    {{ patient.name|slice:":1" }}
+                                </div>
+                                <span class="font-weight-bold" style="color: var(--text-primary);">{{ patient.name }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge badge-light border num-font px-2 py-1" style="font-size: 0.82rem;">
+                                <i class="fas fa-bed mr-1 text-primary"></i> {{ patient.bed_num }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="status-pill {% if patient.status == 'Critical' %}critical{% elif patient.status == 'Recovering' %}recovering{% elif patient.status == 'Recovered' %}recovered{% else %}deceased{% endif %}">
+                                {{ patient.status }}
+                            </span>
+                        </td>
+                        <td class="text-right">
+                            <a href="/patient/{{ patient.id }}" class="btn btn-primary btn-sm px-3 py-1 font-weight-bold" style="font-size: 0.78rem; border-radius: 6px !important;">
+                                <i class="fas fa-edit mr-1"></i> Update
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-secondary">
+                            <i class="fas fa-user-slash fa-3x mb-3"></i>
+                            <h5>No Patient Records Found</h5>
+                            <p>Try modifying your search filter options.</p>
+                        </td>
+                    </tr>
                 {% endfor %}
-                
             </tbody>
         </table>
-    
     </div>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-{% comment %} <script> 
-    $( function() {
-    
-    $( "#searchPatient" ).autocomplete({
-      source: '{% url "autocomplete" %}'
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(function() {
+        // Beautify filter inputs to match system style
+        $('#list input, #list select').addClass('form-control').css({
+            'font-size': '0.88rem',
+            'border-radius': '8px'
+        });
     });
-  } );
 </script>
-{% endcomment %}
-{% endblock content %}
+{% endblock %}

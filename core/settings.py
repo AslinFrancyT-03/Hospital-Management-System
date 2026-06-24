@@ -27,7 +27,7 @@ SECRET_KEY = '6=drjci9-24*%p-ru1sbqbl0$$!b)_q&_cu5z26y7wk+wk9g!^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['hospital-management-covid19.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['hospital-management-covid19.herokuapp.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -134,7 +134,13 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/images/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STORAGES = {
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'

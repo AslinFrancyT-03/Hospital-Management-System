@@ -1,178 +1,123 @@
 {% extends 'main/base.html' %}
 {% load static %}
 
-{% block contentTitle %}
-    {{patient.name}}, {{patient.bed_num}}
-{% endblock contentTitle %}
+{% block title %}Update Patient | Lifeline Clinic{% endblock %}
 
 {% block content %}
-    {% comment %} patient details at registration(profile card) {% endcomment %}
-    {% comment %} download btn {% endcomment %}
-    {% comment %} report file upload {% endcomment %}
+<div class="container-fluid p-0">
+    
+    <!-- Title & Navigation Bar -->
+    <div class="dashboard-title-row mb-4">
+        <div>
+            <h2>Update Patient Details</h2>
+            <p>Modify records for <strong>{{ patient.name }}</strong> (Bed: {{ patient.bed_num }})</p>
+        </div>
+        <div>
+            <a href="{% url 'patient_list' %}" class="btn btn-primary" style="background-color: var(--text-secondary) !important; border-color: var(--text-secondary) !important;">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Registry
+            </a>
+        </div>
+    </div>
 
-    {% comment %} <div class="row">
-  	<div class="col-md-3">
-	<!--left col-->
-		<div class="text-center">
-		<img
-			src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png"
-			class="avatar img-circle img-thumbnail"
-			alt="avatar"
-		/>
-		<h6>Upload a different photo...</h6>
-		<input type="file" class="text-center center-block file-upload" />
-		</div>
-	  </div> 
-	  {% endcomment %}
+    <!-- Edit Form -->
+    <form class="form" action="" method="post" id="registrationForm">
+        {% csrf_token %}
+        
+        <div class="patient-form mb-4">
+            <h4 class="mb-4 text-primary"><i class="fas fa-user-edit mr-2"></i> Contact & Personal Information</h4>
+            <div class="row">
+                <!-- Patient Mobile -->
+                <div class="col-md-6 form-group">
+                    <label for="mobile"><h6>Patient's Contact</h6></label>
+                    <input type="text" id="mobile" class="input-text" name="mobile" placeholder="Mobile Number" value="{{ patient.phone_num }}">
+                </div>
 
-		<form class="form" action="" method="post" id="registrationForm">
-		{% csrf_token %}
-			<div class="container">
-				<div class="patient-form">
-					<div class="row">
-						<div class="col-md-4 form-field mt-4 mb-0">
-						<label for="mobile"><h6>Patient's contact</h6>
-						<input type="text" id="name" class="input-text" type="text" name="mobile" placeholder="Mobile No" value="{{patient.phone_num}}">
-						</label>
-						</div>
+                <!-- Emergency Contact Name -->
+                <div class="col-md-6 form-group">
+                    <label for="relativeName"><h6>Emergency Contact Name</h6></label>
+                    <input type="text" class="input-text" name="relativeName" id="relativeName" placeholder="Relative Name" value="{{ patient.patient_relative_name }}">
+                </div>
 
-						<div class="offset-md-2 col-md-4 form-field mt-4 mb-0">
-						<label for="mobile" class="mb-0"><h6>Relative's contact</h6>
-						<input type="text" id="mobile2" class="input-text" type="text" name="mobile2" placeholder="Mobile No" value="{{patient.patient_relative_contact}}">
-						</label>
-						</div>
+                <!-- Emergency Contact Phone -->
+                <div class="col-md-6 form-group">
+                    <label for="mobile2"><h6>Emergency Contact Phone</h6></label>
+                    <input type="text" id="mobile2" class="input-text" name="mobile2" placeholder="Relative Contact" value="{{ patient.patient_relative_contact }}">
+                </div>
 
-						<div class="form-field mt-4">
-						<label for="relativeName" class="mb-0"><h6>Relative's Name</h6>
-						<input
-							type="text"
-							class="input-text"
-							name="relativeName"
-							id="realtiveName"
-							value="{{patient.patient_relative_name}}"
-							/>
-						</label>
-						</div>
-					<!-- </div>	 -->
+                <!-- Address -->
+                <div class="col-md-6 form-group">
+                    <label for="location"><h6>Permanent Address</h6></label>
+                    <input type="text" class="input-text" id="location" placeholder="Address" name="location" value="{{ patient.address }}">
+                </div>
+            </div>
 
-					<!-- <div class="row">	 -->
-						<div class="col-md-7 form-field mt-0">
-						<label for="address" class="mb-0 mt-0"><h6>Address</h6></label>
-						<input
-							type="address"
-							class="input-text"
-							id="location"
-							placeholder="address"
-							name="location"
-							title="enter a location"
-							value="{{patient.address}}"
-						/>
-						
-						</div>
-						<!-- </div> -->
-						
-						<div class="offset-md-1 col-md-4 form-field mt-0">
-							<label for="symptoms" class="mb-0"><h6>Symptoms</h6></label>
-							<input
-								type="text"
-								class="input-text"
-								name="symptons"
-								id="symptons"
-								value="{{patient.symptoms}}"
-							/>
-						</div>
-						
-						<div class="col-md-7">
-							<h6>Prior ailments</h6>
-							<label for="prior_ailments"><h4>{{patient.prior_ailments}}</h4></label>
-							
-						</div>
+            <h4 class="mt-4 mb-4 text-primary"><i class="fas fa-stethoscope mr-2"></i> Clinical & Admission Status</h4>
+            <div class="row">
+                <!-- Symptoms -->
+                <div class="col-md-6 form-group">
+                    <label for="symptons"><h6>Symptoms (comma-separated list)</h6></label>
+                    <input type="text" class="input-text" name="symptons" id="symptons" value="{{ patient.symptoms }}">
+                </div>
 
-						<div class="col-md-5">
-							<h6>Bed number</h6>
-							<label for="bed_num" class="mb-0">
-							<h4>{{patient.bed_num}}</h4>
-							</label>
-						</div>
+                <!-- Prior Ailments -->
+                <div class="col-md-3 form-group">
+                    <label><h6>Prior Ailments</h6></label>
+                    <div class="p-2 border rounded bg-light text-secondary font-weight-bold" style="font-size: 0.9rem;">
+                        {{ patient.prior_ailments|default:"None reported" }}
+                    </div>
+                </div>
 
-						<div class="col-md-6">
+                <!-- Bed Number -->
+                <div class="col-md-3 form-group">
+                    <label><h6>Assigned Bed</h6></label>
+                    <div class="p-2 border rounded bg-light text-secondary font-weight-bold num-font" style="font-size: 0.9rem;">
+                        Bed {{ patient.bed_num }}
+                    </div>
+                </div>
 
+                <!-- Status Select -->
+                <div class="col-md-6 form-group">
+                    <label for="status"><h6>Patient Status</h6></label>
+                    <select class="input-text" name="status" id="status">
+                        <option value="Critical" {% if patient.status == 'Critical' %}selected{% endif %}>Critical</option>
+                        <option value="Recovering" {% if patient.status == 'Recovering' %}selected{% endif %}>Recovering</option>
+                        <option value="Recovered" {% if patient.status == 'Recovered' %}selected{% endif %}>Recovered</option>
+                        <option value="Deceased" {% if patient.status == 'Deceased' %}selected{% endif %}>Deceased</option>
+                    </select>
+                </div>
 
-						{% comment %} 
-						<label for="symptoms" class="mb-0"><h6>Symptoms</h6></label>
-							<input
-								type="text"
-								class="input-text"
-								name="symptons"
-								id="symptons"
-								value="{{patient.symptoms}}"
-							/>
-						 {% endcomment %}
-						 	<label for="status" class="mb-0">
-							<h6>Status</h6></label>
-							<input
-								type="text"
-								class="input-text"
-								name="status"
-								id="status"
-								value="{{patient.status}}"
-							/>
-							
-						</div>
+                <!-- Doctor -->
+                <div class="col-md-6 form-group">
+                    <label for="doctor"><h6>Assigned Attending Doctor</h6></label>
+                    <select class="input-text" name="doctor" id="doctor">
+                        {% for doctor in doctors %}
+                            <option value="{{ doctor.name }}" {% if patient.doctor.name == doctor.name %}selected{% endif %}>{{ doctor.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-						<div class="col-md-6">
-							<label for="doctor" class="mb-0">
-							<h6>Doctor Assigned: </h6>
-							</label>
-							<input
-								type="text"
-								class="input-text"
-								name="doctor"
-								id="doctor"
-								value="{{patient.doctor}}"
-							/>
-						</div>
+                <!-- Doctor Visiting Time -->
+                <div class="col-md-6 form-group">
+                    <label for="doctor_time"><h6>Doctor Visiting Time</h6></label>
+                    <input type="text" class="input-text" name="doctor_time" id="doctor_time" placeholder="e.g. 10:00 AM - 12:00 PM" value="{{ patient.doctors_visiting_time|default:'' }}">
+                </div>
 
-						<div class="col-md-6">
-							<label for="doctor_time" class="mb-0 mt-4">
-							<h6>Doctor Visiting Time: </h6>
-							</label>
-							<input
-								type="text"
-								class="input-text"
-								name="doctor_time"
-								id="doctor_time"
-								value="{{patient.doctors_visiting_time}}"
-							/>
-						</div>
+                <!-- Doctor Notes -->
+                <div class="col-md-6 form-group">
+                    <label for="doctor_notes"><h6>Attending Doctor's Notes</h6></label>
+                    <textarea class="input-text" name="doctor_notes" id="doctor_notes" rows="3" placeholder="Enter notes here...">{{ patient.doctors_notes|default:'' }}</textarea>
+                </div>
+            </div>
+        </div>
 
-						<div class="col-md-6">
-							<label for="doctor_notes" class="mb-0 mt-4">
-							<h6>Doctor Notes: </h6>
-							</label>
-							<!-- <label for="bed_num"> -->
-							<textarea
-								class="input-text"
-								name="doctor_notes"
-								id="doctor_notes"
-								{{patient.doctors_notes}}
-							>{{patient.doctors_notes}}</textarea>
-						
-						</div>
-
-					</div>
-				</div>
-			</div>
-		
-		<div class="form-group">
-			<div class="col-md-5 mx-auto">
-			<br />
-			<button class="btn btn-lg btn-success btn-block mx-auto" type="submit">
-				<i class="glyphicon glyphicon-ok-sign"></i> Save
-			</button>
-
-			
-			</div>
-	 	</div>
-		 </form>
-{% endblock content %}
+        <!-- Action Row -->
+        <div class="row mb-5">
+            <div class="col-md-4 mx-auto">
+                <button class="btn btn-primary btn-block btn-lg shadow-sm" type="submit">
+                    <i class="fas fa-save mr-2"></i> Save Patient Record
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

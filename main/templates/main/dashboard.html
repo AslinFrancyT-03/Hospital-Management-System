@@ -1,147 +1,338 @@
 {% extends 'main/base.html' %}
 {% load static %}
 
-{% block contentTitle %}
-    Dashboard
-{% endblock contentTitle %}
+{% block title %}Dashboard | Lifeline Clinic{% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
-        <!-- Content Row -->
-        <div class="row">
-            <!-- Recover Card -->
-            <div class="col-xl-4 col-md-6 col-sm-12 mb-4">
-                <div class="card border-left-success shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Recovered</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ recovered_count }}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-heart fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- admitted card -->
-            <div class="col-xl-4 col-md-6 col-sm-12 mb-4">
-                <div class="card border-left-info shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                    Admitted</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ patient_count }}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-stethoscope fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- dead Card  -->
-            <div class="col-xl-4 col-md-6 col-sm-12 mb-4">
-                <div class="card border-left-danger shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Deceased
-                                </div>
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col-auto">
-                                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{deceased_count}}</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-book-dead fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Pending Requests Card -->
-            <div class="col-xl-4 col-md-6 col-sm-12 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    Pending Requests</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">20</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-comments fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- bed availability -->
-            <div class="col-xl-4 col-md-6 col-sm-12 mb-4">
-                <div class="card border-left-primary shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
-                                    Bed availability</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{beds_available}}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-bed fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-4 col-md-6 col-sm-12 mb-4">
-                <div class="card border-left-primary shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
-                                    ventilator availability</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">160</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-ambulance fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="container-fluid p-0">
+    
+    <!-- Hero / Title Section -->
+    <div class="dashboard-title-row">
+        <div>
+            <h2>Dashboard</h2>
+            <p>Welcome back, {{ request.user.first_name|default:"Dr. Staff" }}. Here's your hospital overview today.</p>
         </div>
-
-        <div><h3 class="font-weight-bold my-3">Beds availability</h3></div>
-        <div class="row">
-            <!-- .bg-success.grid-box.my-2.mx-2  -->
-            {% comment %} <div class="bg-success grid-box my-2 mx-2 py-3 px-3"> {% endcomment %}
-            {% comment %} </div> {% endcomment %}
-
-            {% for bed in beds %}
-                <div class="
-                
-                
-                {% if bed.occupied == True %}
-                bg-danger 
-                {% elif bed.occupied == False %}
-                bg-success
-                {% endif %}
-                
-                
-                grid-box my-2 mx-2 py-3 px-3 text-white">{{ bed }}</div>
-            {% endfor %}
-            
+        <div class="datetime-display font-weight-bold">
+            <i class="far fa-calendar-alt text-primary"></i>
+            <span id="live-datetime">Wednesday, June 24, 2026 - 10:45 AM</span>
         </div>
     </div>
 
-{% endblock content %}
+    <!-- Critical Alerts Section -->
+    <div class="critical-alerts-container">
+        {% if critical_count > 0 %}
+            <div class="alert-banner">
+                <div class="alert-left">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>CRITICAL ALERT: {{ critical_count }} patients currently in Critical status. Immediate attention required.</span>
+                </div>
+                <a href="{% url 'patient_list' %}?status=Critical" class="alert-btn text-decoration-none">View Patients</a>
+            </div>
+        {% else %}
+            <div class="normal-system-banner">
+                <i class="fas fa-check-circle"></i>
+                <span>All systems normal. No critical alerts today.</span>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Metric Cards Grid -->
+    <div class="row">
+        <!-- Recovered Card -->
+        <div class="col-xl-4 col-md-6 col-sm-12 mb-4">
+            <div class="metric-card recovered">
+                <div class="card-top">
+                    <span class="card-label">Recovered Patients</span>
+                    <div class="card-icon-wrapper">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                </div>
+                <div class="card-middle">
+                    <span class="card-value num-font">{{ recovered_count }}</span>
+                </div>
+                <div class="card-bottom">
+                    <span class="trend-up"><i class="fas fa-arrow-up"></i> 12%</span>
+                    <span class="trend-label">from last week</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admitted Card -->
+        <div class="col-xl-4 col-md-6 col-sm-12 mb-4">
+            <div class="metric-card admitted">
+                <div class="card-top">
+                    <span class="card-label">Admitted Patients</span>
+                    <div class="card-icon-wrapper">
+                        <i class="fas fa-user-injured"></i>
+                    </div>
+                </div>
+                <div class="card-middle">
+                    <span class="card-value num-font">{{ patient_count }}</span>
+                </div>
+                <div class="card-bottom">
+                    <span class="trend-up"><i class="fas fa-arrow-up"></i> 4%</span>
+                    <span class="trend-label">active admissions</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deceased Card -->
+        <div class="col-xl-4 col-md-6 col-sm-12 mb-4">
+            <div class="metric-card deceased">
+                <div class="card-top">
+                    <span class="card-label">Deceased Patients</span>
+                    <div class="card-icon-wrapper">
+                        <i class="fas fa-procedures"></i>
+                    </div>
+                </div>
+                <div class="card-middle">
+                    <span class="card-value num-font">{{ deceased_count }}</span>
+                </div>
+                <div class="card-bottom">
+                    <span class="trend-label">0 reported today</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Requests Card -->
+        <div class="col-xl-4 col-md-6 col-sm-12 mb-4">
+            <div class="metric-card pending">
+                <div class="card-top">
+                    <span class="card-label">Pending Requests</span>
+                    <div class="card-icon-wrapper">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+                <div class="card-middle">
+                    <span class="card-value num-font">20</span>
+                </div>
+                <div class="card-bottom">
+                    <span class="trend-down"><i class="fas fa-arrow-down"></i> 3%</span>
+                    <span class="trend-label">triage queue</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bed Availability Card -->
+        <div class="col-xl-4 col-md-6 col-sm-12 mb-4">
+            <div class="metric-card beds">
+                <div class="card-top">
+                    <span class="card-label">Available Beds</span>
+                    <div class="card-icon-wrapper">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                </div>
+                <div class="card-middle">
+                    <span class="card-value num-font">{{ beds_available }}</span>
+                </div>
+                <div class="card-bottom">
+                    <span class="trend-label">Out of {{ total_beds }} total beds</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ventilator Availability Card -->
+        <div class="col-xl-4 col-md-6 col-sm-12 mb-4">
+            <div class="metric-card ventilators">
+                <div class="card-top">
+                    <span class="card-label">Ventilator Availability</span>
+                    <div class="card-icon-wrapper">
+                        <i class="fas fa-lungs"></i>
+                    </div>
+                </div>
+                <div class="card-middle">
+                    <span class="card-value num-font">160</span>
+                </div>
+                <div class="card-bottom">
+                    <span class="trend-label">12 currently in use</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Bar Row -->
+    <div class="row quick-stats-row">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="quick-stat-card">
+                <div class="quick-stat-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="quick-stat-details">
+                    <h5 class="num-font">14</h5>
+                    <p>Appointments</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="quick-stat-card">
+                <div class="quick-stat-icon"><i class="fas fa-percentage"></i></div>
+                <div class="quick-stat-details">
+                    <h5 class="num-font">{{ bed_occupancy_pct }}%</h5>
+                    <p>Bed Occupancy</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="quick-stat-card">
+                <div class="quick-stat-icon"><i class="fas fa-user-md"></i></div>
+                <div class="quick-stat-details">
+                    <h5 class="num-font">{{ doctors_count }}</h5>
+                    <p>Staff On Duty</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="quick-stat-card">
+                <div class="quick-stat-icon"><i class="fas fa-vial"></i></div>
+                <div class="quick-stat-details">
+                    <h5 class="num-font">8</h5>
+                    <p>Labs Pending</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Beds availability detailed layout -->
+    <div class="beds-section-card">
+        <div class="beds-header-row">
+            <div class="d-flex align-items-center gap-3">
+                <h3>Beds Availability Map</h3>
+                <span class="text-secondary font-weight-bold" style="font-size: 0.88rem;">
+                    <i class="fas fa-sync-alt fa-spin mr-1 text-primary"></i> Last update: Just now
+                </span>
+            </div>
+            
+            <div class="d-flex align-items-center gap-3">
+                <div class="beds-legend">
+                    <div class="legend-item">
+                        <div class="legend-color available"></div>
+                        <span>Available</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color occupied"></div>
+                        <span>Occupied</span>
+                    </div>
+                </div>
+                
+                <div class="beds-filters">
+                    <button class="filter-pill active" onclick="filterBeds('all')">All Beds</button>
+                    <button class="filter-pill" onclick="filterBeds('available')">Available</button>
+                    <button class="filter-pill" onclick="filterBeds('occupied')">Occupied</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bed ward grid -->
+        <div class="row">
+            <div class="col-12">
+                <div class="ward-group">
+                    <div class="ward-title">Main Care Ward</div>
+                    <div class="beds-grid">
+                        {% for bed in beds %}
+                            <div class="bed-card {% if bed.occupied %}occupied{% else %}available{% endif %}" 
+                                 data-status="{% if bed.occupied %}occupied{% else %}available{% endif %}">
+                                <span>{{ bed.bed_number }}</span>
+                                <i class="fas fa-bed"></i>
+                                <div class="bed-tooltip">
+                                    Bed {{ bed.bed_number }} - {% if bed.occupied %}Occupied{% else %}Available{% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secondary sections: Roster & Patient List Preview -->
+    <div class="row secondary-dashboard-row">
+        <!-- Patient Queue -->
+        <div class="col-lg-7 col-md-12 mb-4">
+            <div class="content-card">
+                <h4><i class="fas fa-users text-primary"></i> Active Patient Queue</h4>
+                <div class="queue-list">
+                    {% for patient in recent_patients %}
+                        <a href="/patient/{{ patient.id }}" class="queue-item">
+                            <div class="queue-user-info">
+                                <div class="queue-avatar">
+                                    {{ patient.name|slice:":1" }}
+                                </div>
+                                <div class="queue-details">
+                                    <h6>{{ patient.name }}</h6>
+                                    <p>Assigned Doctor: {{ patient.doctor.name|default:"Unassigned" }}</p>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="status-pill {% if patient.status == 'Critical' %}critical{% elif patient.status == 'Recovering' %}recovering{% elif patient.status == 'Recovered' %}recovered{% else %}deceased{% endif %}">
+                                    {{ patient.status }}
+                                </span>
+                            </div>
+                        </a>
+                    {% empty %}
+                        <div class="text-center py-4 text-secondary">
+                            <i class="fas fa-clipboard-list fa-2x mb-2"></i>
+                            <p>No active patients in the queue.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Roster / Doctor List -->
+        <div class="col-lg-5 col-md-12 mb-4">
+            <div class="content-card">
+                <h4><i class="fas fa-user-md text-primary"></i> Doctors On Duty</h4>
+                <div class="roster-list">
+                    {% for doctor in doctors %}
+                        <div class="roster-item border-bottom pb-2">
+                            <div class="roster-left">
+                                <div class="roster-dot"></div>
+                                <div>
+                                    <span class="roster-name font-weight-bold">{{ doctor.name }}</span>
+                                    <div class="roster-role">General Physician / On Duty</div>
+                                </div>
+                            </div>
+                            <span class="badge badge-success font-weight-bold" style="font-size: 0.72rem; padding: 4px 8px;">Active</span>
+                        </div>
+                    {% empty %}
+                        <div class="text-center py-4 text-secondary">
+                            <i class="fas fa-user-slash fa-2x mb-2"></i>
+                            <p>No doctors registered in roster.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Live date and time updater
+    function updateDateTime() {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        const now = new Date();
+        document.getElementById('live-datetime').textContent = now.toLocaleDateString('en-US', options);
+    }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+
+    // Bed Map Filters
+    function filterBeds(status) {
+        // Toggle active button
+        $('.beds-filters .filter-pill').removeClass('active');
+        const clickedBtn = event.currentTarget;
+        $(clickedBtn).addClass('active');
+
+        if (status === 'all') {
+            $('.bed-card').show(150);
+        } else if (status === 'available') {
+            $('.bed-card[data-status="available"]').show(150);
+            $('.bed-card[data-status="occupied"]').hide(150);
+        } else if (status === 'occupied') {
+            $('.bed-card[data-status="occupied"]').show(150);
+            $('.bed-card[data-status="available"]').hide(150);
+        }
+    }
+</script>
+{% endblock %}
